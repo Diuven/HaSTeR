@@ -1,6 +1,6 @@
 data:
-  train_dir: '/DATA/ksx/train'
-  test_dir: '/DATA/ksx/valid'
+  train_dir: '/DATA/ksxfix/train'
+  test_dir: '/DATA/ksxfix/valid'
   file_format: '*.jpg'
   height: 224
   width: 224
