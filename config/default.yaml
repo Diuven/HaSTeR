@@ -1,0 +1,10 @@
+data:
+  train_dir: '/DATA/ksx/train'
+  test_dir: '/DATA/ksx/valid'
+  file_format: '*.jpg'
+  height: 224
+  width: 224
+  class_count: 2350
+train:
+  num_epoch: 10000  # max iteration
+  batch_size: 64
