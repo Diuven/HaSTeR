@@ -28,7 +28,7 @@ class KSXAug(Dataset):
 
         self.data_dir = os.path.join(self.hp.data.db_dir, self.hp.data.name, mode)
 
-        if mode not in ('train', 'tests'):
+        if mode not in ('train', 'valid', 'tests'):
             raise ValueError(f"invalid dataloader mode {mode}")
 
         self.dataset_files = sorted(

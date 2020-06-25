@@ -53,3 +53,13 @@ class SimpleCNN(LightningModule):
         loss = F.cross_entropy(pred, lab)
         logs = {'loss': loss}
         return {'loss': loss, 'log': logs}
+
+    def validation_step(self, batch, index):
+        img, lab = batch
+        pred = self(img)
+        loss = F.cross_entropy(pred, lab)
+        return {'val_loss': loss}
+
+    def validation_epoch_end(self, outputs):
+        val_loss_mean = torch.stack([x['val_loss'] for x in outputs]).mean()
+        return {'log': {'val_loss': val_loss_mean}}

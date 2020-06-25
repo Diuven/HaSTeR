@@ -16,6 +16,10 @@ def main():
 
     train_set = KSXAug(hp=hp, mode='train')
     train_loader = DataLoader(train_set, batch_size=hp.train.batch_size, shuffle=True, num_workers=16)
+    valid_set = KSXAug(hp=hp, mode='valid')
+    valid_loader = DataLoader(valid_set, batch_size=hp.train.batch_size, num_workers=16)
+    tests_set = KSXAug(hp=hp, mode='tests')
+    tests_loader = DataLoader(tests_set, batch_size=hp.train.batch_size, shuffle=True, num_workers=16)
 
     train_name = 'SimpleCNN_%s' % hp.data.name
     logger = loggers.TensorBoardLogger('logs/', name=train_name)
@@ -27,7 +31,8 @@ def main():
         resume_from_checkpoint=args.checkpoint
     )
     model = SimpleCNN(hp=hp)
-    trainer.fit(model, train_dataloader=train_loader)
+    trainer.fit(model, train_dataloader=train_loader, val_dataloaders=valid_loader)
+    trainer.test(test_dataloaders=tests_loader)
 
 
 if __name__ == '__main__':
