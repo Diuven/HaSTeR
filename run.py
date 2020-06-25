@@ -13,7 +13,7 @@ def main():
     hp = OmegaConf.load('config/default.yaml')
 
     train_set = KSXAug(hp=hp, mode='train')
-    train_loader = DataLoader(train_set, batch_size=hp.train.batch_size, shuffle=True, num_workers=4)
+    train_loader = DataLoader(train_set, batch_size=hp.train.batch_size, shuffle=True, num_workers=16)
 
     logger = loggers.TensorBoardLogger('logs/')
 

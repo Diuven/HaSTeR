@@ -7,4 +7,4 @@ data:
   class_count: 2350
 train:
   num_epoch: 10000  # max iteration
-  batch_size: 64
+  batch_size: 128
