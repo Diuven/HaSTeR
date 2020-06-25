@@ -50,8 +50,11 @@ class SimpleCNN(BaseModule):
     def configure_optimizers(self):
         return Adam(self.parameters(), lr=1e-4)
 
-    def get_loss(self, batch):
+    def get_loss(self, batch, infer):
         img, lab = batch
-        pred = self(img)
-        loss = F.cross_entropy(pred, lab)
+        loss = F.cross_entropy(infer, lab)
         return loss
+
+    def get_pred(self, infer):
+        pred = torch.argmax(infer, dim=1)
+        return pred

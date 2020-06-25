@@ -1,6 +1,7 @@
 import torch
 from torch.utils.data import DataLoader
 from pytorch_lightning.core.lightning import LightningModule
+from pytorch_lightning.metrics.classification import Accuracy
 from abc import ABC, abstractmethod
 from dataset import KSXDataset
 
@@ -11,21 +12,34 @@ class BaseModule(LightningModule, ABC):
         self.hp = hp
 
     @abstractmethod
-    def get_loss(self, batch):
+    def get_loss(self, batch, infer):
         pass
 
+    @abstractmethod
+    def get_pred(self, infer):
+        pass
+
+    def get_acc(self, batch, infer):
+        img, targ = batch
+        pred = self.get_pred(infer)
+        acc = Accuracy()(pred, targ)
+        return acc
+
     def training_step(self, batch, index):
-        loss = self.get_loss(batch)
-        logs = {'loss': loss}
+        infer = self(batch[0])
+        loss, acc = self.get_loss(batch, infer), self.get_acc(batch, infer)
+        logs = {'loss': loss, 'acc': acc}
         return {'loss': loss, 'log': logs}
 
     def validation_step(self, batch, index):
-        loss = self.get_loss(batch)
-        return {'val_loss': loss}
+        infer = self(batch[0])
+        loss, acc = self.get_loss(batch, infer), self.get_acc(batch, infer)
+        return {'val_loss': loss, 'val_acc': acc}
 
     def test_step(self, batch, index):
-        loss = self.get_loss(batch)
-        return {'test_loss': loss}
+        infer = self(batch[0])
+        loss, acc = self.get_loss(batch, infer), self.get_acc(batch, infer)
+        return {'test_loss': loss, 'test_acc': acc}
 
     def validation_epoch_end(self, outputs):
         val_loss_mean = torch.stack([x['val_loss'] for x in outputs]).mean()

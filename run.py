@@ -26,7 +26,6 @@ def main():
         logger=logger,
         resume_from_checkpoint=args.checkpoint,
         max_epochs=100000,
-        check_val_every_n_epoch=5
     )
     trainer.fit(model)
     trainer.test(model)
