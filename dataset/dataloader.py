@@ -25,11 +25,9 @@ class KSXAug(Dataset):
         self.hp = hp
         self.mode = mode
 
-        if mode is 'train':
-            self.data_dir = self.hp.data.train_dir
-        elif mode is 'test':
-            self.data_dir = self.hp.data.test_dir
-        else:
+        self.data_dir = os.path.join(self.hp.data.db_dir, self.hp.data.name, mode)
+
+        if mode not in ('train', 'tests'):
             raise ValueError(f"invalid dataloader mode {mode}")
 
         self.dataset_files = sorted(
@@ -46,8 +44,8 @@ class KSXAug(Dataset):
         name = self.dataset_files[idx]
         img = Image.open(name)
 
-        if self.mode is 'train':
-            img = augment_image(img)
+        # if self.mode is 'train' and self.hp.train.augment:
+        #     img = augment_image(img)
         arr = transforms.ToTensor()(img)
 
         lab = Path(name).stem.split("_")[1]

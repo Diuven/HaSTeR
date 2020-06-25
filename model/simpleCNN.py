@@ -14,17 +14,20 @@ class SimpleCNN(LightningModule):
         self.flat_size = self.height * self.width // 32 // 32 * 256
         self.class_count = hp.data.class_count
 
+        def ConvBlock(in_c, out_c, ker):
+            res = list()
+            res.append(nn.Conv2d(in_c, out_c, ker, padding=ker//2))
+            res.append(nn.BatchNorm2d(out_c))
+            res.append(nn.ReLU())
+            res.append(nn.MaxPool2d(2, 2))
+            return res
+
         self.feature = nn.Sequential(
-            nn.Conv2d(3, 32, 7, padding=3), nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            nn.Conv2d(32, 32, 5, padding=2), nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            nn.Conv2d(32, 64, 5, padding=2), nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            nn.Conv2d(64, 128, 3, padding=1), nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            nn.Conv2d(128, 256, 3, padding=1), nn.ReLU(),
-            nn.MaxPool2d(2, 2)
+            *ConvBlock(3, 16, 7),
+            *ConvBlock(16, 32, 5),
+            *ConvBlock(32, 64, 5),
+            *ConvBlock(64, 128, 3),
+            *ConvBlock(128, 256, 3)
         )
 
         self.classify = nn.Sequential(
