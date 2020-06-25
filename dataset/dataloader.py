@@ -1,5 +1,6 @@
 from torch.utils.data import Dataset
 from torchvision import transforms
+import torchvision.transforms.functional as TF
 import os
 from glob import glob
 from PIL import Image
@@ -44,9 +45,14 @@ class KSXAug(Dataset):
         name = self.dataset_files[idx]
         img = Image.open(name)
 
-        # if self.mode is 'train' and self.hp.train.augment:
-        #     img = augment_image(img)
-        arr = transforms.ToTensor()(img)
+        if self.hp.train.augment and self.mode is 'train':
+            img = augment_image(img)
+        if self.hp.data.grayscale:
+            img = img.convert("L")
+
+        arr = TF.to_tensor(img)
+        if self.hp.data.normalize:
+            arr = TF.normalize(arr, 0, 1)
 
         lab = Path(name).stem.split("_")[1]
 

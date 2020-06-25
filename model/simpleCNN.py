@@ -22,8 +22,10 @@ class SimpleCNN(LightningModule):
             res.append(nn.MaxPool2d(2, 2))
             return res
 
+        start_channels = 1 if hp.data.grayscale else 3
+
         self.feature = nn.Sequential(
-            *ConvBlock(3, 16, 7),
+            *ConvBlock(start_channels, 16, 7),
             *ConvBlock(16, 32, 5),
             *ConvBlock(32, 64, 5),
             *ConvBlock(64, 128, 3),
