@@ -21,7 +21,7 @@ def augment_image(img):
     return img
 
 
-class KSXAug(Dataset):
+class KSXDataset(Dataset):
     def __init__(self, hp, mode):
         self.hp = hp
         self.mode = mode

@@ -1,12 +1,12 @@
 data:
   db_dir: '/DATA'
-  name: 'ksxaug'
+  name: 'ksxone'
   file_format: '*.jpg'
   height: 224
   width: 224
   class_count: 2350
-  grayscale: False
-  normalize: False
+  grayscale: True
+  normalize: True
 train:
   batch_size: 32
-  augment: True
+  augment: False

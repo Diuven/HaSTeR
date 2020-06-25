@@ -2,12 +2,15 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from torch.optim import Adam
-from pytorch_lightning.core.lightning import LightningModule
+from .baseModule import BaseModule
 
 
-class SimpleCNN(LightningModule):
+class SimpleCNN(BaseModule):
+    """
+    Very simple model: classifying images without decomposing hangul with CNN & FC layers
+    """
     def __init__(self, hp):
-        super(SimpleCNN, self).__init__()
+        super(SimpleCNN, self).__init__(hp)
 
         self.hp = hp
         self.height, self.width = hp.data.height, hp.data.width
@@ -47,19 +50,8 @@ class SimpleCNN(LightningModule):
     def configure_optimizers(self):
         return Adam(self.parameters(), lr=1e-4)
 
-    def training_step(self, batch, index):
+    def get_loss(self, batch):
         img, lab = batch
         pred = self(img)
         loss = F.cross_entropy(pred, lab)
-        logs = {'loss': loss}
-        return {'loss': loss, 'log': logs}
-
-    def validation_step(self, batch, index):
-        img, lab = batch
-        pred = self(img)
-        loss = F.cross_entropy(pred, lab)
-        return {'val_loss': loss}
-
-    def validation_epoch_end(self, outputs):
-        val_loss_mean = torch.stack([x['val_loss'] for x in outputs]).mean()
-        return {'log': {'val_loss': val_loss_mean}}
+        return loss
