@@ -10,6 +10,7 @@ class SimpleCNN(BaseModule):
     Very simple model: classifying images without decomposing hangul with CNN & FC layers
     """
     def __init__(self, hp):
+        hp.data.combined = True
         super(SimpleCNN, self).__init__(hp)
 
         self.hp = hp
@@ -41,8 +42,9 @@ class SimpleCNN(BaseModule):
             nn.Linear(1024, self.hp.data.class_count), nn.Softmax(dim=1)
         )
 
-    def forward(self, x):
-        feat = self.feature(x)
+    def forward(self, batch):
+        img = batch[0]
+        feat = self.feature(img)
         flat = torch.flatten(feat, start_dim=1)
         pred = self.classify(flat)
         return pred

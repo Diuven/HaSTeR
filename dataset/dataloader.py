@@ -1,3 +1,4 @@
+import torch
 from torch.utils.data import Dataset
 from torchvision import transforms
 import torchvision.transforms.functional as TF
@@ -6,7 +7,7 @@ from glob import glob
 from PIL import Image
 from pathlib import Path
 from random import randrange, random
-from utils.hangulUtils import KSXUtil
+from utils.hangulUtils import KSXUtil, HangulUtil
 
 
 def augment_image(img):
@@ -56,4 +57,10 @@ class KSXDataset(Dataset):
 
         lab = Path(name).stem.split("_")[1]
 
-        return arr, KSXUtil.ksx_index(lab)
+        if self.hp.data.combined:
+            targ = KSXUtil.ksx_index(lab)
+        else:
+            targ = HangulUtil.letter_to_caption(lab)
+            targ = torch.LongTensor(targ)
+
+        return arr, targ

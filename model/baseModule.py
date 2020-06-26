@@ -25,19 +25,19 @@ class BaseModule(LightningModule, ABC):
         acc = Accuracy()(pred, targ)
         return acc
 
-    def training_step(self, batch, index):
-        infer = self(batch[0])
+    def training_step(self, batch, index, optimizer_idx=0):
+        infer = self(batch)
         loss, acc = self.get_loss(batch, infer), self.get_acc(batch, infer)
         logs = {'loss': loss, 'acc': acc}
         return {'loss': loss, 'log': logs}
 
     def validation_step(self, batch, index):
-        infer = self(batch[0])
+        infer = self(batch)
         loss, acc = self.get_loss(batch, infer), self.get_acc(batch, infer)
         return {'val_loss': loss, 'val_acc': acc}
 
     def test_step(self, batch, index):
-        infer = self(batch[0])
+        infer = self(batch)
         loss, acc = self.get_loss(batch, infer), self.get_acc(batch, infer)
         return {'test_loss': loss, 'test_acc': acc}
 

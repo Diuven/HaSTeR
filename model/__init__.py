@@ -1,3 +1,3 @@
 from .simpleCNN import *
-from dataset import KSXDataset
-
+from .satNet import *
+model_list = ('SimpleCNN', 'SATNet')

@@ -8,5 +8,13 @@ data:
   grayscale: False
   normalize: False
 train:
-  batch_size: 32
+  batch_size: 128
   augment: True
+  encoder_lr: 0.0001
+  decoder_lr: 0.0005
+model:
+  embedding_dim: 512
+  attention_dim: 512
+  decoder_dim: 512
+  dropout: 0.5
+  alpha_c: 1.
