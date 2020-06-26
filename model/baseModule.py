@@ -51,15 +51,15 @@ class BaseModule(LightningModule, ABC):
 
     def train_dataloader(self):
         dataset = KSXDataset(self.hp, mode='train')
-        loader = DataLoader(dataset, batch_size=self.hp.train.batch_size, shuffle=True, num_workers=16)
+        loader = DataLoader(dataset, batch_size=self.hp.train.batch_size, shuffle=True, num_workers=64)
         return loader
 
     def val_dataloader(self):
         dataset = KSXDataset(self.hp, mode='valid')
-        loader = DataLoader(dataset, batch_size=self.hp.train.batch_size, num_workers=16)
+        loader = DataLoader(dataset, batch_size=self.hp.train.batch_size, num_workers=64)
         return loader
 
     def test_dataloader(self):
         dataset = KSXDataset(self.hp, mode='tests')
-        loader = DataLoader(dataset, batch_size=self.hp.train.batch_size, num_workers=16)
+        loader = DataLoader(dataset, batch_size=self.hp.train.batch_size, num_workers=64)
         return loader

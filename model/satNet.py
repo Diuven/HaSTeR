@@ -231,7 +231,7 @@ class DecoderWithAttention(nn.Module):
         :param encoder_out: encoded images, a tensor of dimension (batch_size, enc_image_size, enc_image_size, encoder_dim)
         :param encoded_captions: encoded captions, a tensor of dimension (batch_size, max_caption_length)
         :param caption_lengths: caption lengths, a tensor of dimension (batch_size, 1)
-        :return: scores for vocabulary, sorted encoded captions, decode lengths, weights, sort indices
+        :return: scores for vocabulary, sorted encoded captions, decode lengths, weights
         """
 
         batch_size = encoder_out.size(0)
