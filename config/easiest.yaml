@@ -8,5 +8,5 @@ data:
   grayscale: True
   normalize: True
 train:
-  batch_size: 256
+  batch_size: 64
   augment: False

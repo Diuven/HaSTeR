@@ -32,7 +32,7 @@ class SATNet(BaseModule):
         imgs, caps = batch
         batch_size = imgs.size(0)
         feat = self.encoder(imgs)
-        caplens = torch.LongTensor(list(5 for _ in range(batch_size)))
+        caplens = torch.LongTensor(list(5 for _ in range(batch_size))).to(device=imgs.device)
 
         scores, caps_sorted, decode_lengths, alphas = self.decoder(feat, caps, caplens)
 
@@ -62,9 +62,10 @@ class SATNet(BaseModule):
 
     def get_loss(self, batch, infer):
         scores, targets, alphas = infer
+
         # flat scores: (bs*(caplen-1), vocab_size), flat_targets: (bs*(caplen-1))
-        flat_scores = scores.reshape(-1, scores.size(2))
-        flat_targets = targets.reshape(-1)
+        flat_scores = scores.view(-1, scores.size(2))
+        flat_targets = targets.flatten()
 
         loss = F.cross_entropy(flat_scores, flat_targets)
         loss += self.hp.model.alpha_c * ((1. - alphas.sum(dim=1)) ** 2).mean()
@@ -253,8 +254,8 @@ class DecoderWithAttention(nn.Module):
         decode_lengths = (caption_lengths - 1).tolist()
 
         # Create tensors to hold word predicion scores and alphas
-        predictions = torch.zeros(batch_size, max(decode_lengths), vocab_size)
-        alphas = torch.zeros(batch_size, max(decode_lengths), num_pixels)
+        predictions = torch.zeros(batch_size, max(decode_lengths), vocab_size).to(device=encoder_out.device)
+        alphas = torch.zeros(batch_size, max(decode_lengths), num_pixels).to(device=encoder_out.device)
 
         # At each time-step, decode by
         # attention-weighing the encoder's output based on the decoder's previous hidden state output
