@@ -43,11 +43,13 @@ class BaseModule(LightningModule, ABC):
 
     def validation_epoch_end(self, outputs):
         val_loss_mean = torch.stack([x['val_loss'] for x in outputs]).mean()
-        return {'log': {'val_loss': val_loss_mean}}
+        val_acc_mean = torch.stack([x['val_acc'] for x in outputs]).mean()
+        return {'log': {'val_loss': val_loss_mean, 'val_acc': val_acc_mean}}
 
     def test_epoch_end(self, outputs):
         test_loss_mean = torch.stack([x['test_loss'] for x in outputs]).mean()
-        return {'log': {'test_loss': test_loss_mean}}
+        test_acc_mean = torch.stack([x['test_acc'] for x in outputs]).mean()
+        return {'log': {'test_loss': test_loss_mean, 'test_acc': test_acc_mean}}
 
     def train_dataloader(self):
         dataset = KSXDataset(self.hp, mode='train')
