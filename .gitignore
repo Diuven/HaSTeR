@@ -239,3 +239,4 @@ dmypy.json
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,pycharm+all,python
 
 logs/
+static/files/
