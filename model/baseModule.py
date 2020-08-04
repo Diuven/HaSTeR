@@ -10,6 +10,7 @@ class BaseModule(LightningModule, ABC):
     def __init__(self, hp):
         super().__init__()
         self.hp = hp
+        self.save_hyperparameters()
 
     @abstractmethod
     def get_loss(self, batch, infer):
@@ -22,7 +23,7 @@ class BaseModule(LightningModule, ABC):
     def get_acc(self, batch, infer):
         img, targ = batch
         pred = self.get_pred(infer)
-        acc = Accuracy()(pred, targ)
+        acc = pred.eq(targ).to(dtype=torch.float).mean()
         return acc
 
     def training_step(self, batch, index, optimizer_idx=0):

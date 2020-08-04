@@ -1,1 +1,2 @@
-from .dataloader import *
+from .KSXDataset import KSXDataset
+from .demoDataset import DemoDataset
