@@ -7,12 +7,15 @@ WIDTH, HEIGHT = 224, 224
 
 def main(args):
     out_path = Path(args.out_path)
-    for name in args.files:
+    for idx, name in enumerate(args.files):
         filepath = Path(name)
         img = Image.open(name)
         img = img.resize((WIDTH, HEIGHT))
-        img.show()
-        img.save(out_path / filepath.name)
+        # img.show()
+        val, _, __ = str(filepath.stem).split("_")
+        copy_name = "%d_%s.jpg" % (idx, val)
+        # print(val, out_path / copy_name)
+        img.save(out_path / copy_name)
     print("Done!")
 
 

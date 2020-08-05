@@ -16,7 +16,8 @@ class TestCallback(Callback):
         for i in range(len(targ_list)):
             targ = HangulUtil.caption_to_jamos(targ_list[i][0])
             pred = HangulUtil.caption_to_jamos(pred_list[i][0])
-            print("Target: %7s, Result: %7s" % (targ, pred))
+            if(targ != pred):
+                print("Target: %7s, Result: %7s (%05dth)" % (targ, pred, i))
         print("Done!!")
     
 
@@ -40,7 +41,7 @@ def main():
     logger = loggers.TensorBoardLogger('logs/', name=train_name)
 
     dataset = DemoDataset(args.datapath)
-    loader = DataLoader(dataset, num_workers=64)
+    loader = DataLoader(dataset, num_workers=64, shuffle=False)
 
     trainer = Trainer(
         gpus=None if args.cpu else -1,

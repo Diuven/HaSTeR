@@ -42,6 +42,14 @@ Run `python3 run.py -h` for a small help.
 
 The logs and checkpoints will be save in `logs` folder.
 
+### Real World Data
+
+If you want to train or test on real world data, you can use `utils/scale.py` to rescale & rename files.
+
+Refer to `utils/scale.py` about the usage. It is recommended to process data in `static/files/` directory.
+
+Example: `python utils/scale.py static/files/raw/*.jpg --out_path static/files/processed`
+
 ---
 
 ## Reference

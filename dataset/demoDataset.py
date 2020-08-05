@@ -14,7 +14,8 @@ class DemoDataset(Dataset):
     def __init__(self, data_dir):
         self.data_dir = data_dir
         self.dataset_files = sorted(
-            glob(os.path.join(self.data_dir, '*.jpg'))
+            glob(os.path.join(self.data_dir, '*.jpg')),
+            key=lambda name: int(Path(name).name.split("_")[0])
         )
 
     def __len__(self):
