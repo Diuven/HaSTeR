@@ -8,6 +8,7 @@ static_path = Path(os.path.realpath(__file__)).parent.parent / 'static'
 
 class HangulUtil:
     # Start: <start>, End: <end>
+    # 종성없음: 
     with open(static_path / "jamo.json", "r") as j:
         word_map = json.loads(j.read())
         word_list = list(word_map)
@@ -63,6 +64,20 @@ class HangulUtil:
         res.append(cls.jamo_to_index('<start>'))
         res += [cls.jamo_to_index(x) for x in cls.decompose(character)]
         res.append(cls.jamo_to_index('<end>'))
+        return res
+    
+    @classmethod
+    def caption_to_jamos(cls, caption):
+        """ Convert caption values to jamo, and return as a string """
+        res = ""
+        for val in caption:
+            jamo = cls.index_to_jamo(int(val))
+            if jamo == '<start>' or jamo == '<end>':
+                continue
+            elif jamo == chr(0x3130):
+                res += chr(0xFF0F)
+            else:
+                res += jamo
         return res
 
 

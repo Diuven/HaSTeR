@@ -40,7 +40,9 @@ class BaseModule(LightningModule, ABC):
     def test_step(self, batch, index):
         infer = self(batch)
         loss, acc = self.get_loss(batch, infer), self.get_acc(batch, infer)
-        return {'test_loss': loss, 'test_acc': acc}
+        # Redundant computation of pred
+        pred = self.get_pred(infer)
+        return {'test_loss': loss, 'test_acc': acc, 'test_res': (batch[1], pred)}
 
     def validation_epoch_end(self, outputs):
         val_loss_mean = torch.stack([x['val_loss'] for x in outputs]).mean()
@@ -50,6 +52,9 @@ class BaseModule(LightningModule, ABC):
     def test_epoch_end(self, outputs):
         test_loss_mean = torch.stack([x['test_loss'] for x in outputs]).mean()
         test_acc_mean = torch.stack([x['test_acc'] for x in outputs]).mean()
+        # Saving this for callback; utils not visible from here
+        self.test_res_targ = torch.stack([x['test_res'][0] for x in outputs])
+        self.test_res_pred = torch.stack([x['test_res'][1] for x in outputs])
         return {'log': {'test_loss': test_loss_mean, 'test_acc': test_acc_mean}}
 
     def train_dataloader(self):

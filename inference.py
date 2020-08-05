@@ -1,10 +1,24 @@
 import argparse
 from pytorch_lightning import Trainer, loggers
+from pytorch_lightning.callbacks import Callback
 from model import SimpleCNN, SATNet, model_list
 from omegaconf import OmegaConf
 from dataset import DemoDataset
 from torch.utils.data import DataLoader
 
+from utils.hangulUtils import HangulUtil
+
+
+class TestCallback(Callback):
+    def on_test_end(self, trainer, pl_module):
+        targ_list = pl_module.test_res_targ
+        pred_list = pl_module.test_res_pred
+        for i in range(len(targ_list)):
+            targ = HangulUtil.caption_to_jamos(targ_list[i][0])
+            pred = HangulUtil.caption_to_jamos(pred_list[i][0])
+            print("Target: %7s, Result: %7s" % (targ, pred))
+        print("Done!!")
+    
 
 def main():
     parser = argparse.ArgumentParser()
@@ -30,7 +44,8 @@ def main():
 
     trainer = Trainer(
         gpus=None if args.cpu else -1,
-        logger=logger
+        logger=logger,
+        callbacks=[TestCallback()]
     )
 
     trainer.test(model, test_dataloaders=loader)
